@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.sys.dao.GeneralInfoDao">
+	
+	<!-- 查询数据-->
+	<select id="findInfoList" resultType="GeneralInfo">
+		select info.title,c.name as cate_name,d1.browse_number as browse_number,d2.parise_number as parise_number,d3.comment_number as comment_number,u.user_name as author,dict.dict_type as source
+		from g_app_information info
+		left join g_app_category c on info.cate_name = c.id
+		join g_app_information_detai d1  on info.id=  d1.infor_id
+		left join g_app_information_detai d2  on info.id=  d2.infor_id
+		join g_app_information_detai d3  on info.id=  d3.infor_id
+		left join js_sys_dict_type dict on
+		<where>
+			<if test="title!=null and title!=''">
+				and  info.title like '%' #{title} '%'
+			</if>
+			<if test="author!=null and author!=''">
+				and info.create_by like '%' #{author} '%'
+			</if>
+			<if test="newsSourceId!=null and newsSourceId!=''">
+				and info.news_source=#{newsSourceId}
+			</if>
+			<if test="cateNameId!=null and cateNameId!=''">
+				and info.cate_name=#{cateNameId}
+			</if>
+			<if test="createDate_lte!=null and createDate_lte!=''">
+				and info.create_date&gt;=#{createDate_lte}
+			</if>
+			<if test="createDate_gte!=null and createDate_gte!=''">
+				and info.create_date&lt;=#{createDate_gte}
+			</if>
+		</where>
+		order by info.create_date desc
+	</select>
+	
+</mapper>
